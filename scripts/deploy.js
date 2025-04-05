@@ -38,6 +38,26 @@ async function main() {
     // );
     // console.log("Initial token distribution completed");
 
+    // 授予 MINTER_ROLE ，让 CourseMarket 合约可以铸造代币
+    const MINTER_ROLE = await courseCertificate.MINTER_ROLE();
+    await courseCertificate.grantRole(MINTER_ROLE, courseMarket.target);
+    console.log(`CourseMarket (${courseMarket.target}) granted MINTER_ROLE`);
+
+    // 上传源码 
+    await hre.run("verify:verify", {
+        address: yiDengToken.target,
+        constructorArguments: [],
+    });
+    await hre.run("verify:verify", {
+        address: courseCertificate.target,
+        constructorArguments: [],
+    });
+    await hre.run("verify:verify", {
+        address: courseMarket.target,
+        constructorArguments: [yiDengToken.target, courseCertificate.target],
+    });
+    console.log("Source code verified on Etherscan");
+
     // 输出合约地址
     console.log("\nDeployed contract addresses:");
     console.log("YiDengToken:", yiDengToken.target);

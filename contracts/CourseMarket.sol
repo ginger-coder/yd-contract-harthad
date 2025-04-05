@@ -175,11 +175,13 @@ contract CourseMarket is Ownable {
             !certificate.hasCertificate(student, web2CourseId),
             "Certificate already issued"
         );
-
+        
+        // 生成证书元数据URI
         string memory metadataURI = generateCertificateURI(
             student,
             web2CourseId
         );
+        // 铸造证书NFT
         uint256 tokenId = certificate.mintCertificate(
             student,
             web2CourseId,
